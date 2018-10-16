@@ -10,8 +10,8 @@ export default withRouteData(({ posts }) => (
     All Posts:
     <ul>
       {posts.map(post => (
-        <li key={post.id}>
-          <Link to={`/blog/post/${post.id}/`}>{post.title}</Link>
+        <li key={post.sys.id}>
+          <Link to={`/article/${post.sys.id}`}>{post.fields.title}</Link>
         </li>
       ))}
     </ul>

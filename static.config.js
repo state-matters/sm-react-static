@@ -1,13 +1,25 @@
-import fetchPosts from './src/contentful/fetchPosts'
+import { getContentTypes } from './src/contentful/get'
 import React, { Component } from 'react'
 import { ServerStyleSheet } from 'styled-components'
+const contentful = require('contentful')
+import * as config from './src/contentful/_config'
+
+const client = contentful.createClient({
+  space: config.SPACE_ID,
+  accessToken: config.PROD_API_KEY
+})
 
 export default {
   getSiteData: () => ({
     title: 'React Static with Contentful CMS'
   }),
   getRoutes: async () => {
-    const posts = await fetchPosts()
+    const entries = await client.getEntries({
+      content_type: 'article'
+    })
+
+    const articles = entries.items.map(item => item.fields)
+
     return [
       {
         path: '/',
@@ -18,16 +30,24 @@ export default {
         component: 'src/containers/About'
       },
       {
-        path: '/blog',
-        component: 'src/containers/Blog',
+        path: '/data',
+        component: 'src/containers/Data',
+        getData: async () => ({
+          title: 'Data!',
+          data: await client.getContentTypes()
+        })
+      },
+      {
+        path: '/articles',
+        component: 'src/containers/Articles',
         getData: () => ({
-          posts
+          data: entries
         }),
-        children: posts.map(post => ({
-          path: `/post/${post.id}`,
-          component: 'src/containers/Post',
+        children: articles.map(article => ({
+          path: `/article/${article.sys.id}`,
+          component: 'src/containers/Data',
           getData: () => ({
-            post
+            data: article
           })
         }))
       },
@@ -36,7 +56,7 @@ export default {
         component: 'src/containers/404'
       }
     ]
-  },
+  }
   // renderToHtml: (render, Comp, meta) => {
   //   const sheet = new ServerStyleSheet()
   //   const html = render(sheet.collectStyles(<Comp />))
