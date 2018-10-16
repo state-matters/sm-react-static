@@ -38,13 +38,23 @@ export default {
         })
       },
       {
+        path: '/lessons',
+        component: 'src/containers/Articles',
+        getData: async () => ({
+          title: 'Lessons!',
+          data: await client.getEntries({
+            content_type: 'lesson'
+          })
+        })
+      },
+      {
         path: '/articles',
         component: 'src/containers/Articles',
         getData: () => ({
           data: entries
         }),
         children: articles.map(article => ({
-          path: `/article/${article.sys.id}`,
+          path: `/article/${article.id}`,
           component: 'src/containers/Data',
           getData: () => ({
             data: article

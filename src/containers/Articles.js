@@ -3,12 +3,8 @@ import React from 'react'
 import { RouteData, withRouteData, Link } from 'react-static'
 //
 //
-const ArticleWrapper = ({ data }) => (
+const ListWrapper = ({ data }) => (
   <div>
-    <div>
-      <h1>Articles</h1>
-      <br />
-      All Articles:
       <ul>
         {data['items'].map(post => (
           <li key={post.sys.id}>
@@ -16,11 +12,10 @@ const ArticleWrapper = ({ data }) => (
           </li>
         ))}
       </ul>
-    </div>
   </div>
 )
 export default () => (
-  <RouteData component={ArticleWrapper}/>
+  <RouteData component={ListWrapper}/>
 )
 //
 // export default withRouteData(({ data }) => (
